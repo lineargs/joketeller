@@ -1,32 +1,29 @@
-package com.udacity.gradle.builditbigger;
+package com.example.jokedisplay;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.example.JokeTeller;
-import com.example.jokedisplay.JokeDisplay;
+public class JokeDisplay extends AppCompatActivity {
 
-
-public class MainActivity extends AppCompatActivity {
-
-    private JokeTeller jokeTeller;
+    public static final String INTENT_EXTRA = "joke";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        jokeTeller = new JokeTeller();
+        setContentView(R.layout.joke_display);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        TextView jokeText = (TextView) findViewById(R.id.joke_text_view);
+        jokeText.setText(getIntent().getStringExtra(INTENT_EXTRA));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_joke_display, menu);
         return true;
     }
 
@@ -40,16 +37,10 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == android.R.id.home) {
+            onBackPressed();
         }
 
         return super.onOptionsItemSelected(item);
     }
-
-    public void tellJoke(View view) {
-        Intent intent = new Intent(this, JokeDisplay.class);
-        intent.putExtra(JokeDisplay.INTENT_EXTRA, jokeTeller.getJoke());
-        startActivity(intent);
-    }
-
-
 }
