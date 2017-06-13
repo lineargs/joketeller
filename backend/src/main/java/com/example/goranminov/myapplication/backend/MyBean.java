@@ -1,17 +1,19 @@
 package com.example.goranminov.myapplication.backend;
 
+import com.example.JokeTeller;
+
 /**
  * The object model for the data we are sending through endpoints
  */
 public class MyBean {
 
-    private String myData;
+    private JokeTeller jokeTeller;
 
+    public MyBean() {
+        jokeTeller = new JokeTeller();
+    }
     public String getData() {
-        return myData;
+        return jokeTeller.getJoke();
     }
 
-    public void setData(String data) {
-        myData = data;
-    }
 }
