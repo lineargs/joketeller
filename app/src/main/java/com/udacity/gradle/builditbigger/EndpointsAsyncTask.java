@@ -36,14 +36,11 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
                     // options for running against local devappserver
                     // - 10.0.2.2 is localhost's IP address in Android emulator
                     // - turn off compression when running against local devappserver
-                    .setRootUrl(context.getString(R.string.root_url));
+                    .setRootUrl("https://testjokes-170420.appspot.com/_ah/api/");
             // end options for devappserver
 
             myApiService = builder.build();
         }
-
-//        context = params[0].first;
-//        String name = params[0].second;
 
         try {
             return myApiService.newJoke(new MyBean()).execute().getData();

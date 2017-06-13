@@ -31,9 +31,6 @@ public class MyEndpoint {
      */
     @ApiMethod(name = "newJoke")
     public MyBean sayHi(MyBean bean) {
-//        MyBean response = new MyBean();
-//        response.setData("Hi, " + name);
-
         return bean;
     }
 
