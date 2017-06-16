@@ -3,5 +3,8 @@
     <string name="instructions">Press the button for a delicious joke!</string>
     <string name="button_text">Tell Joke</string>
     <string name="action_settings">Settings</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
     <string name="root_url" translatable="false">https://testjokes-170420.appspot.com/_ah/api/</string>
+    <string name="interstitial_error">Interstitial ad failed to load.</string>
 </resources>

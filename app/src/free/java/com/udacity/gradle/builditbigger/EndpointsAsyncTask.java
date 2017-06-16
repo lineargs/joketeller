@@ -90,7 +90,7 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
-                Toast.makeText(context, "Interstitial ad failed to load.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getString(R.string.interstitial_error), Toast.LENGTH_SHORT).show();
                 loadJokeDisplay();
             }
 
