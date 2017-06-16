@@ -6,10 +6,14 @@ import android.os.AsyncTask;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.goranminov.myapplication.backend.myApi.MyApi;
 import com.example.goranminov.myapplication.backend.myApi.model.MyBean;
 import com.example.jokedisplay.JokeDisplay;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
@@ -23,6 +27,7 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
     private static MyApi myApiService = null;
     private Context context;
     private ProgressBar progressBar;
+    private String result;
 
     public EndpointsAsyncTask(Context context, ProgressBar progressBar) {
         this.context = context;
@@ -45,7 +50,7 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
                     // options for running against local devappserver
                     // - 10.0.2.2 is localhost's IP address in Android emulator
                     // - turn off compression when running against local devappserver
-                    .setRootUrl("https://testjokes-170420.appspot.com/_ah/api/");
+                    .setRootUrl(context.getString(R.string.root_url));
             // end options for devappserver
 
             myApiService = builder.build();
@@ -60,9 +65,45 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
 
     @Override
     protected void onPostExecute(String result) {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
+        this.result = result;
+        final InterstitialAd interstitialAd = new InterstitialAd(context);
+        interstitialAd.setAdUnitId(context.getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+        AdRequest adRequest = new AdRequest
+                .Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        interstitialAd.loadAd(adRequest);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+                interstitialAd.show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+                Toast.makeText(context, "Interstitial ad failed to load.", Toast.LENGTH_SHORT).show();
+                loadJokeDisplay();
+            }
+
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                loadJokeDisplay();
+            }
+        });
+
+    }
+
+    private void loadJokeDisplay() {
         Intent intent = new Intent(context, JokeDisplay.class);
         intent.putExtra(JokeDisplay.INTENT_EXTRA, result);
         context.startActivity(intent);
