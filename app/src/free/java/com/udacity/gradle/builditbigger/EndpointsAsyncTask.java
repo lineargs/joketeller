@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Pair;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.goranminov.myapplication.backend.myApi.MyApi;
 import com.example.goranminov.myapplication.backend.myApi.model.MyBean;
@@ -20,9 +22,19 @@ import java.io.IOException;
 class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
     private static MyApi myApiService = null;
     private Context context;
+    private ProgressBar progressBar;
 
-    public EndpointsAsyncTask(Context context) {
+    public EndpointsAsyncTask(Context context, ProgressBar progressBar) {
         this.context = context;
+        this.progressBar = progressBar;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -48,6 +60,9 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
 
     @Override
     protected void onPostExecute(String result) {
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }
         Intent intent = new Intent(context, JokeDisplay.class);
         intent.putExtra(JokeDisplay.INTENT_EXTRA, result);
         context.startActivity(intent);
